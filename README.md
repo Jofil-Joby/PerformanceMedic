@@ -1,45 +1,133 @@
 # PerformanceMedic
 
-> Portable agent for surfacing obvious nested-loop patterns that deserve performance review.
+> A portable engineering agent for **source performance patterns**.
 
-## What it does
+PerformanceMedic inspects observable project evidence, detects **potential nested-loop patterns**, and produces an explainable improvement plan. Its purpose is not to replace specialist tooling. It provides a focused, auditable diagnostic layer that can travel across agent runtimes.
 
-PerformanceMedic scans source text for recognizable nested-loop structures and reports them as review candidates. It intentionally avoids turning a syntactic pattern into a guaranteed performance verdict.
+## What makes it different
 
-### Diagnostic fingerprint
-
-**Code pattern → performance signal → evidence → review action**
-
-## Why this agent is distinct
-
-PerformanceMedic is designed as an early warning layer. Its job is to identify code shapes that may deserve deeper profiling, not to replace benchmarks or production telemetry.
-
-That boundary is important because static pattern detection and actual runtime performance are not the same thing.
-
-## Workflow
+This project follows an **evidence → decision → explanation** model:
 
 ```text
-Source code
-   ↓
-Pattern scanner
-   ↓
-Nested-loop rule
-   ↓
-Observed evidence
-   ↓
-Profiling / optimization recommendation
+Project
+  ↓
+Scanner
+  ↓
+Domain Evidence
+  ↓
+Deterministic Diagnostic Rule
+  ↓
+Finding + Evidence + Confidence
+  ↓
+Improvement Plan
 ```
+
+The agent does not invent evidence. A finding is tied to what the scanner can actually observe.
+
+## Diagnostic contract
+
+| Layer | PerformanceMedic behavior |
+| --- | --- |
+| Domain | source performance patterns |
+| Primary signal | nested iteration in source |
+| Remediation | Review nested iteration and data-access strategy |
+| Output | Structured, explainable findings |
+| Uncertainty | Explicitly constrained by available evidence |
+
+## Portable architecture
+
+```text
+                    ┌─────────────────────┐
+                    │   Portable Agent    │
+                    │ identity + behavior  │
+                    └──────────┬──────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              ↓                ↓                ↓
+          Diagnostic        Duties &         Explainability
+            Logic           Workflow           Contract
+              │
+              ↓
+        Runtime Adapters
+       ┌──────┬──────┬──────┬──────┐
+       ↓      ↓      ↓      ↓
+    OpenAI  CrewAI  Claude  Lyzr
+```
+
+The core diagnostic logic is kept separate from framework-specific adapters. This is the central design idea of the project, not four copies of the same agent wearing different hats.
+
+## Repository structure
+
+```text
+agent.yaml          # Portable identity and passport metadata
+SOUL.md             # Identity, principles, and behavior
+AGENTS.md           # Agent responsibilities
+DUTIES.md           # Maker / Checker workflow
+EXPLAINABILITY.md   # Decision, inputs, limits, and evidence contract
+core/               # Shared result model
+tools/              # Scanner and domain diagnostics
+skills/             # Declared capabilities
+workflows/          # Agent workflows
+adapters/           # Runtime-facing adapters
+tests/              # Deliberately diagnostic project fixtures
+```
+
+## Passport portability
+
+The agent is structured for the OpenGAP passport model and can be exported to:
+
+- OpenAI Agents SDK
+- CrewAI
+- Claude Code
+- Lyzr
+
+The important part is the **portable contract**: identity, behavior, duties, explainability, tools, and skills remain defined independently of a single runtime.
 
 ## Verification
 
-The repository contains an OpenGAP passport, performance-focused fixture, explainability and duty contracts, four framework adapters, and automated adapter verification.
+The repository includes:
 
-OpenGAP validation passed and all four framework exports have been exercised successfully.
+- Local adapter verification
+- A domain-specific broken-project fixture
+- OpenGAP-compatible passport metadata
+- Explainability requirements
+- Export verification across the supported targets
 
-## Design principle
+The engineering workflow is:
 
-**Flag candidates, not certainties.** PerformanceMedic recommends review where a pattern is visible and avoids claiming measured latency that it never observed.
+```text
+Validate passport
+    → Verify adapters
+    → Run diagnostic fixture
+    → Export with OpenGAP
+    → Inspect generated artifacts
+```
 
-## Medic family
+## Scope and limitations
 
-PerformanceMedic provides the performance-analysis lens in a portable family of focused engineering agents.
+PerformanceMedic is a focused diagnostic prototype. Its conclusions are limited to the evidence and rules implemented in this repository. It should complement, not replace, production-grade static analysis, security scanners, observability platforms, CI systems, or human review where appropriate.
+
+## Why this project exists
+
+This repository is one member of a deliberately modular **Medic agent family**. Each agent applies the same portable passport architecture to a different engineering failure surface.
+
+That makes the collection useful as an interoperability experiment:
+
+```text
+One passport architecture
+        +
+Different diagnostic domains
+        +
+Multiple agent runtimes
+        =
+Portable engineering-agent family
+```
+
+## Challenge context
+
+Built for the **HiDevs × Lyzr Agent Passport Challenge**, exploring portable agent identity, behavior contracts, explainability, verification, and framework interoperability.
+
+## Author
+
+**Jofil Joby**  
+[GitHub](https://github.com/Jofil-Joby)
