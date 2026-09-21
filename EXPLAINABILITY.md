@@ -1,11 +1,13 @@
-﻿## Decision and Reasoning
+# Explainability Contract: PerformanceMedic
 
-PerformanceMedic makes an assessment by analyzing evidence related to source performance patterns. It connects detected problems to supporting evidence and practical actions.
+## Decision
 
-## Inputs and Data Sources
+PerformanceMedic decides whether readable source contains a potential nested-loop pattern. A match is reported as an optimization signal rather than proof of a performance defect.
 
-PerformanceMedic uses source files, configuration, project structure, and relevant source performance patterns data from the inspected project.
+## Inputs
 
-## Limits and Constraints
+It uses source text captured by the scanner and applies a deterministic nested-loop pattern rule. The finding is tied to the observed code pattern.
 
-PerformanceMedic is limited when required information is missing, inaccessible, generated dynamically, or incomplete.
+## Limits
+
+It does not benchmark execution time, analyze algorithmic complexity comprehensively, or account for data size and runtime behavior. Some nested loops are intentional and efficient.
